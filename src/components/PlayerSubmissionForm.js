@@ -3,21 +3,37 @@ import PropTypes from 'prop-types';
 
 import './PlayerSubmissionForm.css';
 
-const PlayerSubmissionForm = () => {
+const PlayerSubmissionForm = ({ index, sendSubmission, fields }) => {
+  const [adj1, setAdj1] = useState('');
+
+  const handleChange = (event) => {
+    const newAdj = event.target.value;
+    setAdj1(newAdj);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    sendSubmission(adj1);
+    setAdj1('');
+  };
+
+
+
   return (
     <div className="PlayerSubmissionForm">
-      <h3>Player Submission Form for Player #{  }</h3>
+      <h3>Player Submission Form for Player #{index}</h3>
 
-      <form className="PlayerSubmissionForm__form" >
+      <form className="PlayerSubmissionForm__form" onSubmit={handleSubmit}>
 
         <div className="PlayerSubmissionForm__poem-inputs">
-
-          {
-            // Put your form inputs here... We've put in one below as an example
-          }
           <input
-            placeholder="hm..."
-            type="text" />
+            placeholder="adjective"
+            name="adj1"
+            type="text"
+            value={adj1}
+            className={adj1 ? '' : 'PlayerSubmissionFormat__input--invalid'}
+            onChange={handleChange}
+          />
 
         </div>
 
