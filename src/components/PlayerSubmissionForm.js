@@ -1,40 +1,58 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import './PlayerSubmissionForm.css';
 
+const buildInitialState = (fields) => {
+  const initialState = {};
+  for (const field of fields) {
+    if (field.key) {
+      initialState[field.key] = ''
+    }
+  }
+  return initialState
+}
+
 const PlayerSubmissionForm = ({ index, sendSubmission, fields }) => {
-  const [adj1, setAdj1] = useState('');
+  const [formData, setFormData] = useState(buildInitialState(fields));
 
   const handleChange = (event) => {
-    const newAdj = event.target.value;
-    setAdj1(newAdj);
+    const { name, value } = event.target;
+    setFormData((prevData) => {
+      return { ...prevData, [name]: value }
+    });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    sendSubmission(adj1);
-    setAdj1('');
+    sendSubmission(formData);
+    setFormData(buildInitialState(fields))
   };
-
-
 
   return (
     <div className="PlayerSubmissionForm">
       <h3>Player Submission Form for Player #{index}</h3>
 
       <form className="PlayerSubmissionForm__form" onSubmit={handleSubmit}>
-
         <div className="PlayerSubmissionForm__poem-inputs">
-          <input
-            placeholder="adjective"
-            name="adj1"
-            type="text"
-            value={adj1}
-            className={adj1 ? '' : 'PlayerSubmissionFormat__input--invalid'}
-            onChange={handleChange}
-          />
-
+          {
+            fields.map((field) => {
+              if (field.key) {
+                const { key, placeholder } = field;
+                const value = formData[key];
+                return <input
+                  key={key}
+                  placeholder={placeholder}
+                  name={key}
+                  type="text"
+                  value={value}
+                  className={value ? '' : 'PlayerSubmissionFormat__input--invalid'}
+                  onChange={handleChange}
+                />
+              } else {
+                return field;
+              }
+            })
+          }
         </div>
 
         <div className="PlayerSubmissionForm__submit">

@@ -15,8 +15,18 @@ const Game = () => {
     }
   }).join(' ');
 
+  const convertToLine = (fields, formData) => {
+    return fields.map((field) => {
+      if (field.key) {
+        return formData[field.key];
+      } else {
+        return field;
+      }
+    }).join(' ');
+  }
+
   const sendSubmission = (formData) => {
-    setLines(preLines => [...preLines, formData])
+    setLines(preLines => [...preLines, convertToLine(FIELDS, formData)])
   };
 
   const revealPoem = () => {
@@ -39,7 +49,7 @@ const Game = () => {
 
       {
         !done &&
-        <PlayerSubmissionForm index={lines.length + 1} sendSubmission={sendSubmission} />
+        <PlayerSubmissionForm index={lines.length + 1} sendSubmission={sendSubmission} fields={FIELDS} />
       }
       <FinalPoem isSubmitted={done} submissions={lines} revealPoem={revealPoem} />
 
